@@ -21,6 +21,7 @@
     "typescript": "~3.7.2"
   },
   "scripts": {
+    "commit":"git-cz",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -41,6 +42,8 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "commitizen": "^4.0.5",
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
     "cz-conventional-changelog": "3.1.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
@@ -53,5 +56,10 @@
     "eslint-plugin-react-hooks": "^2.5.1",
     "husky": "^4.2.5",
     "prettier": "^2.0.5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
