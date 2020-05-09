@@ -17,7 +17,7 @@ export default createGlobalStyle`
   }
 
   body, input, button {
-    font: 16px Roboto, sans-serif;
+    font: 16px 'Press Start 2P', cursive;
   }
 
   #root{
