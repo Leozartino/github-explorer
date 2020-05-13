@@ -1,10 +1,11 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import { FiChevronRight } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 import logo from '../../assets/github-arrow.svg';
 import { Title, Form, ListRepositories, Error } from './style';
 import api from '../../services/apiClient';
 
-interface Repository {
+interface RepositoryDTO {
   full_name: string;
   description: string;
   owner: {
@@ -14,9 +15,19 @@ interface Repository {
 }
 
 const Dashboard: React.FC = () => {
-  const [newRepo, setNewRepo] = useState('');
-  const [inputError, setInputError] = useState('');
-  const [repositories, setRepositories] = useState<Repository[]>([]);
+  const [newRepo, setNewRepo] = useState<string>('');
+  const [inputError, setInputError] = useState<string>('');
+  const [repositories, setRepositories] = useState<RepositoryDTO[]>(() => {
+    const storage = localStorage.getItem('@GitHubExplorer:repositories');
+    return storage ? JSON.parse(storage) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem(
+      '@GitHubExplorer:repositories',
+      JSON.stringify(repositories),
+    );
+  }, [repositories]);
 
   async function handleAddRepository(
     event: FormEvent<HTMLFormElement>,
@@ -28,7 +39,7 @@ const Dashboard: React.FC = () => {
       return;
     }
     try {
-      const response = await api.get<Repository>(`repos/${newRepo}`);
+      const response = await api.get<RepositoryDTO>(`repos/${newRepo}`);
 
       setRepositories([...repositories, response.data]);
       setNewRepo('');
@@ -53,14 +64,17 @@ const Dashboard: React.FC = () => {
       {inputError && <Error>{inputError}</Error>}
       <ListRepositories>
         {repositories.map((repository) => (
-          <a key={repository.full_name} href="infos">
+          <Link
+            key={repository.full_name}
+            to={`/repository/${repository.full_name}`}
+          >
             <img src={repository.owner.avatar_url} alt="avatar" />
             <div id="container-info-repository">
               <strong>{repository.full_name}</strong>
               <p>{repository.description}</p>
             </div>
             <FiChevronRight size={20} />
-          </a>
+          </Link>
         ))}
       </ListRepositories>
     </>
